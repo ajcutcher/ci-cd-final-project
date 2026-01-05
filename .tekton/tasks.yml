@@ -78,3 +78,22 @@ spec:
         npm ci
         echo "Running Jest tests..."
         npm test $(params.args)
+
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: openshift-client
+spec:
+  description: Minimal OpenShift client task for running oc commands.
+  params:
+    - name: SCRIPT
+      type: string
+      description: The oc commands to run
+  steps:
+    - name: oc
+      image: quay.io/openshift/origin-cli:latest
+      script: |
+        #!/bin/sh
+        set -e
+        $(params.SCRIPT)
